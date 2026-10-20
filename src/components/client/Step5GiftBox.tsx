@@ -16,11 +16,13 @@ export const Step5GiftBox: React.FC<Step5GiftBoxProps> = ({ onNext }) => {
     setIsOpening(true);
 
     soundManager.playGiftOpen();
+    particleFx.partyCannon();
+    particleFx.showerFromTop();
     particleFx.burst({
       x: e.clientX,
       y: e.clientY,
       count: 50,
-      shapes: ['heart', 'star', 'circle'],
+      shapes: ['heart', 'star', 'ribbon', 'circle'],
       colors: ['#F47BA7', '#F7C96B', '#DCCBFF', '#FFE1EC', '#FFFFFF']
     });
 

@@ -52,13 +52,14 @@ export const Step2Cake: React.FC<Step2CakeProps> = ({ settings, onNext }) => {
       );
     }, 1400);
 
-    // If this was the last candle
+    // If this was the last candle - trigger automatic party popper & cannon!
     const remainingCount = candles.filter((c) => c.id !== id && c.isLit).length;
     if (remainingCount === 0) {
       setTimeout(() => {
-        soundManager.playSparkle();
-        particleFx.sparklesBurst(window.innerWidth / 2, window.innerHeight * 0.45);
-      }, 300);
+        soundManager.playConfetti();
+        particleFx.partyCannon();
+        particleFx.showerFromTop();
+      }, 250);
     }
   };
 
@@ -66,27 +67,23 @@ export const Step2Cake: React.FC<Step2CakeProps> = ({ settings, onNext }) => {
     if (allCandlesExtinguished) return;
 
     soundManager.playCandleBlow();
-    particleFx.burst({
-      x: window.innerWidth / 2,
-      y: window.innerHeight * 0.42,
-      count: 45,
-      colors: ['#F7C96B', '#F47BA7', '#FFFFFF', '#FFE1EC', '#DCCBFF']
-    });
 
     setCandles((prev) =>
       prev.map((c) => ({ ...c, isLit: false, isSmoking: true }))
     );
+
+    // Automatically fire the celebratory party popper & confetti cannon!
+    setTimeout(() => {
+      soundManager.playConfetti();
+      particleFx.partyCannon();
+      particleFx.showerFromTop();
+    }, 200);
 
     setTimeout(() => {
       setCandles((prev) =>
         prev.map((c) => ({ ...c, isSmoking: false }))
       );
     }, 1400);
-
-    setTimeout(() => {
-      soundManager.playSparkle();
-      particleFx.sparklesBurst(window.innerWidth / 2, window.innerHeight * 0.45);
-    }, 300);
   };
 
   return (

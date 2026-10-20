@@ -10,6 +10,12 @@ export interface SurpriseSettings {
   finalWishesHeading: string;
   finalWishesMessage: string;
   footerTagline: string;
+  // Audio & Music Management
+  bgmStyle: 'romantic_lullaby' | 'birthday_musicbox' | 'piano_dream' | 'custom_url';
+  customAudioUrl?: string;
+  confettiSound: 'sparkle' | 'popper' | 'chime' | 'horn' | 'silent';
+  musicEnabled: boolean;
+  soundFxEnabled: boolean;
 }
 
 export interface Wish {

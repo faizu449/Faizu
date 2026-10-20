@@ -8,8 +8,8 @@ interface AdminLoginProps {
 }
 
 export const AdminLogin: React.FC<AdminLoginProps> = ({ onSuccess, onNavigateHome }) => {
-  const [email, setEmail] = useState('admin@birthday.com');
-  const [password, setPassword] = useState('birthday2026!');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -41,7 +41,7 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onSuccess, onNavigateHom
         <div className="flex items-center justify-between pt-2">
           <button
             onClick={onNavigateHome}
-            className="flex items-center gap-1.5 text-xs text-pink-300 hover:text-white transition-colors"
+            className="flex items-center gap-1.5 text-xs text-pink-300 hover:text-white transition-colors cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Return to Surprise</span>
@@ -82,7 +82,7 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onSuccess, onNavigateHom
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  placeholder="admin@birthday.com"
+                  placeholder="admin@example.com"
                   className="w-full h-12 pl-10 pr-3 rounded-xl bg-white/5 border border-pink-400/20 text-white text-sm focus:outline-none focus:border-pink-400 focus:bg-white/10 transition-colors"
                 />
               </div>
@@ -106,24 +106,11 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onSuccess, onNavigateHom
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-pink-300/60 hover:text-white"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-pink-300/60 hover:text-white cursor-pointer"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
-              </div>
-            </div>
-
-            {/* Hint box showing default demo credentials for the admin */}
-            <div className="p-3 rounded-xl bg-pink-500/10 border border-pink-400/15 text-[11px] text-pink-200/80 leading-relaxed text-left">
-              <div className="flex items-center gap-1 font-semibold text-[#F7C96B] mb-0.5">
-                <Sparkles className="w-3 h-3" />
-                <span>Initial Admin Credentials:</span>
-              </div>
-              <div>Email: <code className="text-pink-100">admin@birthday.com</code></div>
-              <div>Password: <code className="text-pink-100">birthday2026!</code></div>
-              <div className="text-[10px] text-pink-300/60 mt-0.5">
-                (You can change your password anytime inside the dashboard)
               </div>
             </div>
 

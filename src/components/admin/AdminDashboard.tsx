@@ -8,7 +8,8 @@ import {
   LogOut,
   Sparkles,
   Gift,
-  LayoutDashboard
+  LayoutDashboard,
+  Music
 } from 'lucide-react';
 import { AdminDataResponse } from '../../types.js';
 import { api } from '../../services/api.js';
@@ -16,6 +17,7 @@ import { WishesManager } from './WishesManager.js';
 import { MemoriesManager } from './MemoriesManager.js';
 import { SettingsManager } from './SettingsManager.js';
 import { SecurityManager } from './SecurityManager.js';
+import { MusicManager } from './MusicManager.js';
 
 interface AdminDashboardProps {
   onLogout: () => void;
@@ -25,7 +27,7 @@ interface AdminDashboardProps {
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, onPreviewClient }) => {
   const [data, setData] = useState<AdminDataResponse | null>(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'overview' | 'wishes' | 'memories' | 'content' | 'security'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'wishes' | 'memories' | 'music' | 'content' | 'security'>('overview');
 
   const loadData = async () => {
     try {
@@ -207,6 +209,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, onPrev
             <MemoriesManager memories={memories} onRefresh={loadData} />
           )}
 
+          {activeTab === 'music' && (
+            <MusicManager settings={settings} onRefresh={loadData} />
+          )}
+
           {activeTab === 'content' && (
             <SettingsManager settings={settings} onRefresh={loadData} />
           )}
@@ -221,7 +227,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, onPrev
         </div>
 
         {/* Fixed Mobile Bottom Tab Bar */}
-        <nav className="border-t border-white/10 pt-2 grid grid-cols-5 items-center shrink-0">
+        <nav className="border-t border-white/10 pt-2 grid grid-cols-6 items-center shrink-0">
           <button
             onClick={() => setActiveTab('overview')}
             className={`min-h-[44px] flex flex-col items-center justify-center text-[10px] transition-colors ${
@@ -250,6 +256,16 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, onPrev
           >
             <Camera className="w-4 h-4 mb-0.5" />
             <span>Photos</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('music')}
+            className={`min-h-[44px] flex flex-col items-center justify-center text-[10px] transition-colors ${
+              activeTab === 'music' ? 'text-pink-400 font-semibold' : 'text-pink-200/50 hover:text-white'
+            }`}
+          >
+            <Music className="w-4 h-4 mb-0.5" />
+            <span>Music</span>
           </button>
 
           <button

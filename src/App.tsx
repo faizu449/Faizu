@@ -71,7 +71,7 @@ export default function App() {
   }, []);
 
   // Handle Admin Routes
-  if (currentPath === '/admin/login') {
+  if (currentPath === '/admin/login' || currentPath === '/admin') {
     if (isAuthenticated) {
       navigate('/admin/dashboard');
       return null;
@@ -87,7 +87,7 @@ export default function App() {
     );
   }
 
-  if (currentPath === '/admin/dashboard' || currentPath.startsWith('/admin')) {
+  if (currentPath === '/admin/dashboard' || currentPath.startsWith('/admin/')) {
     if (!isAuthenticated && !api.getToken()) {
       navigate('/admin/login');
       return null;
@@ -115,7 +115,9 @@ export default function App() {
     <ClientLayout
       currentStep={clientStep}
       totalSteps={9}
+      settings={settings}
       onStepChange={(step) => setClientStep(step)}
+      onNavigate={navigate}
     >
       {clientStep === 1 && (
         <Step1Landing

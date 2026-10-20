@@ -115,8 +115,9 @@ export const Step3Balloons: React.FC<Step3BalloonsProps> = ({ onNext }) => {
     particleFx.burst({
       x: e.clientX,
       y: e.clientY,
-      count: 30,
-      colors: [balloon.color, '#FFFFFF', '#FFE1EC', '#F7C96B']
+      count: 35,
+      shapes: ['rect', 'star', 'ribbon', 'heart'],
+      colors: [balloon.color, '#FFFFFF', '#FFE1EC', '#F7C96B', '#DCCBFF']
     });
 
     setPoppedWish(balloon.wishText);
@@ -128,13 +129,10 @@ export const Step3Balloons: React.FC<Step3BalloonsProps> = ({ onNext }) => {
     const nextRemaining = balloons.filter((b) => b.id !== balloon.id && !b.isPopped).length;
     if (nextRemaining === 0) {
       setTimeout(() => {
-        soundManager.playSparkle();
-        particleFx.burst({
-          x: window.innerWidth / 2,
-          y: window.innerHeight * 0.4,
-          count: 60
-        });
-      }, 350);
+        soundManager.playConfetti();
+        particleFx.partyCannon();
+        particleFx.showerFromTop();
+      }, 200);
     }
   };
 

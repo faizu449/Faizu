@@ -1,5 +1,5 @@
 /**
- * Canvas-based particle effect system for confetti, sparkles, and floating hearts
+ * Canvas-based particle effect system for confetti, ribbon streamers, sparkles, and floating hearts
  */
 
 interface Particle {
@@ -12,9 +12,10 @@ interface Particle {
   rotation: number;
   rotationSpeed: number;
   opacity: number;
-  shape: 'rect' | 'circle' | 'heart' | 'star';
+  shape: 'rect' | 'circle' | 'heart' | 'star' | 'ribbon';
   life: number;
   maxLife: number;
+  ribbonWobble?: number;
 }
 
 class ParticleSystem {
@@ -52,43 +53,48 @@ class ParticleSystem {
     x?: number;
     y?: number;
     count?: number;
-    shapes?: ('rect' | 'circle' | 'heart' | 'star')[];
+    shapes?: ('rect' | 'circle' | 'heart' | 'star' | 'ribbon')[];
     colors?: string[];
+    velocityFactor?: number;
   }) {
     this.init();
     if (!this.ctx) return;
 
     const x = options?.x ?? window.innerWidth / 2;
     const y = options?.y ?? window.innerHeight / 2;
-    const count = options?.count ?? 45;
-    const shapes = options?.shapes ?? ['rect', 'circle', 'heart', 'star'];
+    const count = options?.count ?? 55;
+    const shapes = options?.shapes ?? ['rect', 'circle', 'heart', 'star', 'ribbon'];
     const colors = options?.colors ?? [
       '#F47BA7',
       '#D83C79',
       '#FFE1EC',
       '#DCCBFF',
       '#F7C96B',
+      '#6EE7B7',
+      '#93C5FD',
       '#FFFFFF'
     ];
+    const velocityFactor = options?.velocityFactor ?? 1;
 
     for (let i = 0; i < count; i++) {
       const angle = Math.random() * Math.PI * 2;
-      const speed = 2 + Math.random() * 8;
-      const maxLife = 60 + Math.random() * 40;
+      const speed = (2.5 + Math.random() * 9) * velocityFactor;
+      const maxLife = 70 + Math.random() * 50;
 
       this.particles.push({
         x,
         y,
         vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed - 2.5,
-        size: 7 + Math.random() * 8,
+        vy: Math.sin(angle) * speed - 2.8,
+        size: 7 + Math.random() * 9,
         color: colors[Math.floor(Math.random() * colors.length)],
         rotation: Math.random() * 360,
-        rotationSpeed: (Math.random() - 0.5) * 12,
+        rotationSpeed: (Math.random() - 0.5) * 14,
         opacity: 1,
         shape: shapes[Math.floor(Math.random() * shapes.length)],
         life: 0,
-        maxLife
+        maxLife,
+        ribbonWobble: Math.random() * 10
       });
     }
 
@@ -97,24 +103,119 @@ class ParticleSystem {
     }
   }
 
+  // Celebratory Dual Corner Cannons (Blasts diagonally up from bottom-left & bottom-right)
+  public partyCannon() {
+    this.init();
+    if (!this.ctx) return;
+
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+
+    const colors = [
+      '#F47BA7',
+      '#D83C79',
+      '#FFE1EC',
+      '#F7C96B',
+      '#DCCBFF',
+      '#38BDF8',
+      '#34D399',
+      '#FFFFFF'
+    ];
+
+    // Left cannon (fires towards top-right)
+    for (let i = 0; i < 45; i++) {
+      const angle = -Math.PI / 4 + (Math.random() - 0.5) * 0.55;
+      const speed = 9 + Math.random() * 10;
+      this.particles.push({
+        x: 10,
+        y: h - 20,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        size: 8 + Math.random() * 9,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        rotation: Math.random() * 360,
+        rotationSpeed: (Math.random() - 0.5) * 15,
+        opacity: 1,
+        shape: ['rect', 'star', 'ribbon', 'heart'][Math.floor(Math.random() * 4)] as any,
+        life: 0,
+        maxLife: 90 + Math.random() * 40
+      });
+    }
+
+    // Right cannon (fires towards top-left)
+    for (let i = 0; i < 45; i++) {
+      const angle = (-3 * Math.PI) / 4 + (Math.random() - 0.5) * 0.55;
+      const speed = 9 + Math.random() * 10;
+      this.particles.push({
+        x: w - 10,
+        y: h - 20,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        size: 8 + Math.random() * 9,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        rotation: Math.random() * 360,
+        rotationSpeed: (Math.random() - 0.5) * 15,
+        opacity: 1,
+        shape: ['rect', 'star', 'ribbon', 'heart'][Math.floor(Math.random() * 4)] as any,
+        life: 0,
+        maxLife: 90 + Math.random() * 40
+      });
+    }
+
+    if (!this.animationId) {
+      this.loop();
+    }
+  }
+
+  // Floating Hearts Burst
   public heartsBurst(x?: number, y?: number) {
     this.burst({
       x,
       y,
-      count: 35,
+      count: 40,
       shapes: ['heart'],
-      colors: ['#F47BA7', '#D83C79', '#FF85A2', '#FFC2D1', '#FFE1EC']
+      colors: ['#F47BA7', '#D83C79', '#FF85A2', '#FFC2D1', '#FFE1EC', '#FFFFFF']
     });
   }
 
+  // Golden Sparkles & Starlight
   public sparklesBurst(x?: number, y?: number) {
     this.burst({
       x,
       y,
-      count: 30,
+      count: 35,
       shapes: ['star', 'circle'],
-      colors: ['#F7C96B', '#FFF0B3', '#FFFFFF', '#FFE1EC']
+      colors: ['#F7C96B', '#FFF0B3', '#FFFFFF', '#FFE1EC', '#F47BA7']
     });
+  }
+
+  // Confetti Shower from the top
+  public showerFromTop() {
+    this.init();
+    if (!this.ctx) return;
+    const w = window.innerWidth;
+    const colors = ['#F47BA7', '#D83C79', '#F7C96B', '#DCCBFF', '#93C5FD', '#FFFFFF'];
+
+    for (let i = 0; i < 60; i++) {
+      this.particles.push({
+        x: Math.random() * w,
+        y: -20 - Math.random() * 150,
+        vx: (Math.random() - 0.5) * 3,
+        vy: 2 + Math.random() * 4,
+        size: 7 + Math.random() * 8,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        rotation: Math.random() * 360,
+        rotationSpeed: (Math.random() - 0.5) * 10,
+        opacity: 1,
+        shape: ['rect', 'ribbon', 'star', 'heart'][Math.floor(Math.random() * 4)] as any,
+        life: 0,
+        maxLife: 120 + Math.random() * 60
+      });
+    }
+
+    if (!this.animationId) {
+      this.loop();
+    }
   }
 
   private drawHeart(ctx: CanvasRenderingContext2D, size: number) {
@@ -153,6 +254,18 @@ class ParticleSystem {
     ctx.fill();
   }
 
+  private drawRibbon(ctx: CanvasRenderingContext2D, size: number, p: Particle) {
+    const w = size * 0.4;
+    const h = size * 1.8;
+    ctx.beginPath();
+    ctx.moveTo(-w / 2, -h / 2);
+    ctx.quadraticCurveTo(w * 1.5, 0, -w / 2, h / 2);
+    ctx.lineTo(w / 2, h / 2);
+    ctx.quadraticCurveTo(-w * 1.5, 0, w / 2, -h / 2);
+    ctx.closePath();
+    ctx.fill();
+  }
+
   private loop = () => {
     if (!this.ctx || !this.canvas) return;
 
@@ -163,8 +276,8 @@ class ParticleSystem {
       p.life++;
       p.x += p.vx;
       p.y += p.vy;
-      p.vy += 0.18; // gravity
-      p.vx *= 0.98; // air resistance
+      p.vy += 0.16; // gravity
+      p.vx *= 0.985; // air resistance
       p.rotation += p.rotationSpeed;
       p.opacity = 1 - p.life / p.maxLife;
 
@@ -189,6 +302,8 @@ class ParticleSystem {
         this.drawHeart(this.ctx, p.size);
       } else if (p.shape === 'star') {
         this.drawStar(this.ctx, p.size);
+      } else if (p.shape === 'ribbon') {
+        this.drawRibbon(this.ctx, p.size, p);
       }
 
       this.ctx.restore();

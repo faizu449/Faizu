@@ -18,12 +18,13 @@ export const Step4Question: React.FC<Step4QuestionProps> = ({ settings, onNext }
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handleYes = (e: React.MouseEvent) => {
-    soundManager.playSparkle();
+    soundManager.playHappyBirthdayChime();
+    particleFx.partyCannon();
     particleFx.heartsBurst(e.clientX, e.clientY);
     setIsSuccess(true);
     setTimeout(() => {
       onNext();
-    }, 900);
+    }, 1200);
   };
 
   const handleNo = () => {

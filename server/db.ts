@@ -28,7 +28,12 @@ const DEFAULT_SETTINGS: SurpriseSettings = {
   memoriesIntroText: "Every picture holds a moment, every moment tells a story, and every memory is a little treasure. Now let's revisit the beautiful moments we've shared.",
   finalWishesHeading: 'Wishes Just for You 💖',
   finalWishesMessage: 'May your life always be filled with happiness, beautiful memories, and endless reasons to smile. 💗',
-  footerTagline: 'Made with Love ♡'
+  footerTagline: 'Made with Love ♡',
+  bgmStyle: 'romantic_lullaby',
+  customAudioUrl: '',
+  confettiSound: 'sparkle',
+  musicEnabled: true,
+  soundFxEnabled: true
 };
 
 const DEFAULT_WISHES: Wish[] = [
@@ -156,7 +161,9 @@ export class Database {
     if (fs.existsSync(DB_FILE)) {
       try {
         const raw = fs.readFileSync(DB_FILE, 'utf-8');
-        return JSON.parse(raw);
+        const parsed = JSON.parse(raw);
+        parsed.settings = { ...DEFAULT_SETTINGS, ...parsed.settings };
+        return parsed;
       } catch (err) {
         console.error('Failed to parse database file, resetting to defaults', err);
       }

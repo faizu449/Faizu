@@ -17,13 +17,15 @@ export const Step9FinalWishes: React.FC<Step9FinalWishesProps> = ({
 }) => {
   const published = finalWishes.filter((w) => w.isPublished);
 
+  // Trigger celebration on reaching final wishes
+  React.useEffect(() => {
+    soundManager.playHappyBirthdayChime();
+    particleFx.partyCannon();
+  }, []);
+
   const handleReplayClick = () => {
-    soundManager.playSparkle();
-    particleFx.burst({
-      x: window.innerWidth / 2,
-      y: window.innerHeight * 0.5,
-      count: 40
-    });
+    soundManager.playPartyHorn();
+    particleFx.partyCannon();
     onReplay();
   };
 

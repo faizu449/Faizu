@@ -11,7 +11,8 @@ interface Step1LandingProps {
 
 export const Step1Landing: React.FC<Step1LandingProps> = ({ settings, onNext }) => {
   const handleOpen = (e: React.MouseEvent) => {
-    soundManager.playSparkle();
+    soundManager.playHappyBirthdayChime();
+    particleFx.partyCannon();
     particleFx.sparklesBurst(e.clientX, e.clientY);
     onNext();
   };
