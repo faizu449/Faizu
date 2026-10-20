@@ -39,6 +39,14 @@ export const Step2Cake: React.FC<Step2CakeProps> = ({ settings, onNext }) => {
     const burstX = clientX ?? window.innerWidth / 2;
     const burstY = clientY ?? window.innerHeight * 0.42;
     particleFx.sparklesBurst(burstX, burstY);
+    // Automatic celebratory party popper burst on candle blow
+    particleFx.burst({
+      x: burstX,
+      y: burstY,
+      count: 25,
+      shapes: ['star', 'ribbon', 'rect', 'heart'],
+      colors: ['#F7C96B', '#F47BA7', '#FFFFFF', '#DCCBFF', '#D83C79']
+    });
 
     // Turn off flame and show smoke
     setCandles((prev) =>
@@ -139,7 +147,7 @@ export const Step2Cake: React.FC<Step2CakeProps> = ({ settings, onNext }) => {
                 const touch = e.changedTouches[0];
                 handleBlowCandle(candle.id, touch?.clientX, touch?.clientY);
               }}
-              className="absolute bottom-0 w-12 h-24 flex flex-col items-center justify-end cursor-pointer focus:outline-none group active:scale-95 transition-transform"
+              className="absolute bottom-0 w-8 h-24 flex flex-col items-center justify-end cursor-pointer focus:outline-none group active:scale-95 transition-transform"
               style={{
                 left: `calc(50% + ${candle.xPos}px)`,
                 transform: 'translateX(-50%)'

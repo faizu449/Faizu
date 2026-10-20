@@ -48,6 +48,18 @@ export const api = {
     return data;
   },
 
+  async refreshCredentials(): Promise<{ success: boolean; email: string; defaultPass: string }> {
+    const res = await fetch('/api/auth/refresh-credentials', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error || 'Failed to refresh credentials');
+    }
+    return data;
+  },
+
   async logout(): Promise<void> {
     const token = this.getToken();
     if (token) {

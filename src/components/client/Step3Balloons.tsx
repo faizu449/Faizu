@@ -111,13 +111,18 @@ export const Step3Balloons: React.FC<Step3BalloonsProps> = ({ onNext }) => {
   const handlePop = (balloon: Balloon, e: React.MouseEvent) => {
     if (balloon.isPopped) return;
 
+    const rect = (e.currentTarget as HTMLElement)?.getBoundingClientRect?.();
+    const burstX = rect ? rect.left + rect.width / 2 : (e.clientX || window.innerWidth / 2);
+    const burstY = rect ? rect.top + rect.height / 2 : (e.clientY || window.innerHeight / 2);
+
     soundManager.playBalloonPop();
+    // Immediate party popper particle burst at the balloon
     particleFx.burst({
-      x: e.clientX,
-      y: e.clientY,
-      count: 35,
+      x: burstX,
+      y: burstY,
+      count: 45,
       shapes: ['rect', 'star', 'ribbon', 'heart'],
-      colors: [balloon.color, '#FFFFFF', '#FFE1EC', '#F7C96B', '#DCCBFF']
+      colors: [balloon.color, '#FFFFFF', '#FFE1EC', '#F7C96B', '#DCCBFF', '#F47BA7']
     });
 
     setPoppedWish(balloon.wishText);
@@ -132,8 +137,18 @@ export const Step3Balloons: React.FC<Step3BalloonsProps> = ({ onNext }) => {
         soundManager.playConfetti();
         particleFx.partyCannon();
         particleFx.showerFromTop();
-      }, 200);
+      }, 150);
     }
+  };
+
+  const handlePopAll = () => {
+    if (allPopped) return;
+    soundManager.playBalloonPop();
+    soundManager.playConfetti();
+    particleFx.partyCannon();
+    particleFx.showerFromTop();
+    setBalloons((prev) => prev.map((b) => ({ ...b, isPopped: true })));
+    setPoppedWish('All Wishes Unlocked! 💖');
   };
 
   return (
@@ -150,15 +165,26 @@ export const Step3Balloons: React.FC<Step3BalloonsProps> = ({ onNext }) => {
         </p>
 
         {/* Counter */}
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-pink-500/15 border border-pink-400/20 text-xs text-pink-200 mt-1">
-          <Sparkles className="w-3.5 h-3.5 text-[#F7C96B]" />
-          <span>
-            {remaining > 0 ? `${remaining} balloons floating` : 'All 6 balloons popped! 🎉'}
-          </span>
-          {poppedWish && (
-            <span className="text-amber-300 font-semibold ml-1">
-              +{poppedWish}
+        <div className="flex flex-col items-center gap-1.5 mt-1">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-pink-500/15 border border-pink-400/20 text-xs text-pink-200">
+            <Sparkles className="w-3.5 h-3.5 text-[#F7C96B]" />
+            <span>
+              {remaining > 0 ? `${remaining} balloons floating` : 'All 6 balloons popped! 🎉'}
             </span>
+            {poppedWish && (
+              <span className="text-amber-300 font-semibold ml-1">
+                +{poppedWish}
+              </span>
+            )}
+          </div>
+
+          {!allPopped && (
+            <button
+              onClick={handlePopAll}
+              className="text-[11px] text-[#F7C96B] hover:text-white underline decoration-pink-400/50 underline-offset-4 cursor-pointer py-0.5 px-2 active:scale-95 transition-transform"
+            >
+              Or pop all balloons at once 🎈
+            </button>
           )}
         </div>
       </div>

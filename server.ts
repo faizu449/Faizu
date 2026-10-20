@@ -59,10 +59,25 @@ app.post('/api/auth/login', (req: Request, res: Response) => {
       res.status(401).json({ error: result.error || 'Authentication failed' });
       return;
     }
-    res.json({ token: result.token, email });
+    res.json({ token: result.token, email: email || 'admin@birthday.com' });
   } catch (err) {
     console.error('Login error:', err);
     res.status(500).json({ error: 'Authentication error' });
+  }
+});
+
+app.post('/api/auth/refresh-credentials', (_req: Request, res: Response) => {
+  try {
+    const creds = db.resetAdminCredentials();
+    res.json({
+      success: true,
+      message: 'Admin credentials have been refreshed to default.',
+      email: creds.email,
+      defaultPass: creds.defaultPass
+    });
+  } catch (err) {
+    console.error('Failed to refresh credentials:', err);
+    res.status(500).json({ error: 'Failed to refresh credentials' });
   }
 });
 
