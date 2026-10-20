@@ -1,0 +1,6 @@
+{
+  "name": "Birthday & Memories",
+  "description": "An enchanting, mobile-first birthday surprise website with interactive candles, balloons, gift box, personal memories gallery, and admin management.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,101 @@
+@import "tailwindcss";
+
+@theme {
+  --font-script: "Dancing Script", cursive, sans-serif;
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  --color-pink-primary: #F47BA7;
+  --color-rose-deep: #D83C79;
+  --color-blush-soft: #FFE1EC;
+  --color-lavender-dream: #DCCBFF;
+  --color-midnight-deep: #15172F;
+  --color-cream-warm: #FFF7F0;
+  --color-gold-accent: #F7C96B;
+}
+
+:root {
+  font-family: var(--font-sans);
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #15172F;
+  color: #1f2937;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom scrollbar for mobile drawers and memory lists */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(244, 123, 167, 0.3);
+  border-radius: 9999px;
+}
+
+/* Candle flame flicker animation */
+@keyframes flicker {
+  0%, 100% {
+    transform: scale(1) rotate(-1deg);
+    opacity: 0.95;
+    filter: drop-shadow(0 0 6px #F7C96B);
+  }
+  25% {
+    transform: scale(1.08, 0.96) rotate(1.5deg);
+    opacity: 1;
+    filter: drop-shadow(0 0 10px #F47BA7);
+  }
+  50% {
+    transform: scale(0.95, 1.05) rotate(-2deg);
+    opacity: 0.9;
+    filter: drop-shadow(0 0 7px #F7C96B);
+  }
+  75% {
+    transform: scale(1.05, 0.98) rotate(2deg);
+    opacity: 1;
+    filter: drop-shadow(0 0 11px #FFA07A);
+  }
+}
+
+.animate-flicker {
+  animation: flicker 1.2s ease-in-out infinite alternate;
+  transform-origin: bottom center;
+}
+
+/* Floating animation */
+@keyframes floatGentle {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(1.5deg);
+  }
+}
+
+.animate-float {
+  animation: floatGentle 3.5s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.05);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2.5s ease-in-out infinite;
+}
