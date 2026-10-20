@@ -81,6 +81,8 @@ export const Step8MemoriesGallery: React.FC<Step8MemoriesGalleryProps> = ({
                 <img
                   src={memory.imageUrl}
                   alt={memory.title}
+                  loading="lazy"
+                  decoding="async"
                   referrerPolicy="no-referrer"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   onError={(e) => {

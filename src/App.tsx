@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { PublicContentResponse } from './types.js';
 import { api } from './services/api.js';
+import { DEFAULT_PUBLIC_CONTENT } from './data/defaultContent.js';
 
 // Client Experience Components
 import { ClientLayout } from './components/client/ClientLayout.js';
@@ -22,8 +23,9 @@ export default function App() {
   const [currentPath, setCurrentPath] = useState<string>(
     typeof window !== 'undefined' ? window.location.pathname : '/'
   );
-  const [content, setContent] = useState<PublicContentResponse | null>(null);
-  const [loading, setLoading] = useState(true);
+  
+  // Instant synchronous startup with zero wait
+  const [content, setContent] = useState<PublicContentResponse>(DEFAULT_PUBLIC_CONTENT);
   const [clientStep, setClientStep] = useState(1);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
@@ -43,25 +45,24 @@ export default function App() {
     }
   };
 
-  // Verify auth on mount and when route changes to admin
+  // Only verify auth when accessing admin routes
   useEffect(() => {
-    const checkAuthStatus = async () => {
-      const user = await api.checkAuth();
-      setIsAuthenticated(!!user);
-    };
-    checkAuthStatus();
+    if (currentPath.startsWith('/admin')) {
+      const checkAuthStatus = async () => {
+        const user = await api.checkAuth();
+        setIsAuthenticated(!!user);
+      };
+      checkAuthStatus();
+    }
   }, [currentPath]);
 
-  // Load public surprise content
+  // Load public surprise content in background without blocking initial paint
   const loadPublicContent = async () => {
     try {
-      setLoading(true);
       const res = await api.fetchPublicContent();
       setContent(res);
     } catch (err) {
-      console.error('Failed to load surprise content:', err);
-    } finally {
-      setLoading(false);
+      // Default content is already rendered
     }
   };
 
@@ -107,23 +108,9 @@ export default function App() {
     );
   }
 
-  // Client Experience Loading State
-  if (loading || !content) {
-    return (
-      <div className="min-h-screen bg-[#15172F] flex items-center justify-center p-4">
-        <div className="text-center space-y-4">
-          <div className="w-12 h-12 mx-auto rounded-full border-2 border-pink-400 border-t-transparent animate-spin" />
-          <p className="text-sm font-['Dancing_Script',cursive] text-2xl text-pink-200">
-            Unwrapping your magical surprise... ✨
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   const { settings, giftWishes, finalWishes, memories } = content;
 
-  // Client 9-Step Sequential Interactive Journey
+  // Instant Client 9-Step Sequential Interactive Journey
   return (
     <ClientLayout
       currentStep={clientStep}
